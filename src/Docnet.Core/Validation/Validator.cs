@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Docnet.Core.Validation
 {
@@ -26,6 +27,14 @@ namespace Docnet.Core.Validation
             if (bytes == null || bytes.Length == 0)
             {
                 throw new ArgumentNullException(name, "bytes can't be null or empty");
+            }
+        }
+
+        public static void CheckStreamNullOrEmpty(Stream stream, string name)
+        {
+            if (stream == null || stream.Length == 0)
+            {
+                throw new ArgumentNullException(name, "stream can't be null or empty");
             }
         }
 

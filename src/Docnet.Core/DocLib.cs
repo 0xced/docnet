@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Docnet.Core.Bindings;
 using Docnet.Core.Editors;
 using Docnet.Core.Models;
@@ -76,6 +77,18 @@ namespace Docnet.Core
             Validator.CheckBytesNullOrZero(bytes, nameof(bytes));
 
             return new DocReader(bytes, password, dimensionOptions);
+        }
+
+        public IDocReader GetDocReader(Stream stream, PageDimensions dimensionOptions)
+        {
+            return new DocReader(stream, null, dimensionOptions);
+        }
+
+        public IDocReader GetDocReader(Stream stream, string password, PageDimensions dimensionOptions)
+        {
+            Validator.CheckStreamNullOrEmpty(stream, nameof(stream));
+
+            return new DocReader(stream, password, dimensionOptions);
         }
 
         /// <inheritdoc />

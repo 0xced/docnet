@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using Docnet.Core.Exceptions;
 
@@ -7,6 +8,7 @@ namespace Docnet.Core.Bindings
     internal sealed class DocumentWrapper : IDisposable
     {
         private readonly IntPtr _ptr;
+        private readonly FPDF_FILEACCESS _fileAccess;
 
         public FpdfDocumentT Instance { get; private set; }
 
@@ -34,6 +36,22 @@ namespace Docnet.Core.Bindings
             }
         }
 
+        public DocumentWrapper(Stream stream, string password)
+        {
+            // See https://github.com/pvginkel/PdfiumViewer/blob/b253afcfa00bb2f94ef3e8e15efc066e6b3af0f1/PdfiumViewer/NativeMethods.Pdfium.cs#L425-L440
+            var fileAccessInternal = default(FPDF_FILEACCESS.__Internal);
+            fileAccessInternal.m_FileLen = (uint)stream.Length;
+            fileAccessInternal.m_GetBlock = IntPtr.Zero;
+            fileAccessInternal.m_Param = IntPtr.Zero;
+            _fileAccess = FPDF_FILEACCESS.__CreateInstance(fileAccessInternal);
+            Instance = fpdf_view.FPDF_LoadCustomDocument(_fileAccess, password);
+
+            if (Instance == null)
+            {
+                throw new DocnetLoadDocumentException("unable to open the document", fpdf_view.FPDF_GetLastError());
+            }
+        }
+
         public DocumentWrapper(FpdfDocumentT instance)
         {
             Instance = instance;
@@ -54,6 +72,8 @@ namespace Docnet.Core.Bindings
             fpdf_view.FPDF_CloseDocument(Instance);
 
             Marshal.FreeHGlobal(_ptr);
+
+            _fileAccess?.Dispose();
 
             Instance = null;
         }

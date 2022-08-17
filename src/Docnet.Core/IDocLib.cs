@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Docnet.Core.Editors;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
@@ -47,6 +48,23 @@ namespace Docnet.Core
         /// <param name="dimensionOptions">Page scaling options.</param>
         /// <returns>Document reader object.</returns>
         IDocReader GetDocReader(byte[] bytes, string password, PageDimensions dimensionOptions);
+
+        /// <summary>
+        /// Get document reader for this particular document.
+        /// </summary>
+        /// <param name="stream">Stream holding the document.</param>
+        /// <param name="dimensionOptions">Page scaling options.</param>
+        /// <returns>Document reader object.</returns>
+        IDocReader GetDocReader(Stream stream, PageDimensions dimensionOptions);
+
+        /// <summary>
+        /// Get document reader for this particular document.
+        /// </summary>
+        /// <param name="stream">Stream holding the document.</param>
+        /// <param name="password">File password.</param>
+        /// <param name="dimensionOptions">Page scaling options.</param>
+        /// <returns>Document reader object.</returns>
+        IDocReader GetDocReader(Stream stream, string password, PageDimensions dimensionOptions);
 
         /// <summary>
         /// Merge two documents into one.

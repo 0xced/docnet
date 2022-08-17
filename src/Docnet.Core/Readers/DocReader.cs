@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Docnet.Core.Bindings;
 using Docnet.Core.Exceptions;
 using Docnet.Core.Models;
@@ -30,6 +31,16 @@ namespace Docnet.Core.Readers
             lock (DocLib.Lock)
             {
                 _docWrapper = new DocumentWrapper(bytes, password);
+            }
+        }
+
+        public DocReader(Stream stream, string password, PageDimensions dimensions)
+        {
+            _dimensions = dimensions;
+
+            lock (DocLib.Lock)
+            {
+                _docWrapper = new DocumentWrapper(stream, password);
             }
         }
 

@@ -5,6 +5,7 @@ namespace Docnet.Tests.Integration.Utils
     public enum Input
     {
         FromFile,
-        FromBytes
+        FromBytes,
+        FromStream,
     }
 }
